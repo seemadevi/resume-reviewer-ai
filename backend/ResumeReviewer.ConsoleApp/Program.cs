@@ -1,10 +1,10 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;       // ← Library import
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.Extensions.Configuration;
 
 // 1. Load API key from User Secrets
 var config = new ConfigurationBuilder()
-    .AddUserSecrets<Program>()
+    .AddUserSecrets<Program>()     // Load secrets from User Secrets
     .Build();
 
 var apiKey = config["OpenAI:ApiKey"] ?? throw new InvalidOperationException("OpenAI:ApiKey is missing in User Secrets!");
@@ -16,11 +16,17 @@ Console.WriteLine($"Using model: {model} \n");
 
 
 // 3. Create Semantic Kernel
-var builder = Kernel.CreateBuilder();
-builder.AddOpenAIChatCompletion(model, apiKey);
-var kernel = builder.Build();
+// ↓ हे Semantic Kernel चं main object create करणं
+var builder = Kernel.CreateBuilder();              // ← Kernel = brain
+
+// ↓ Kernel ला OpenAI शी connect करणं
+builder.AddOpenAIChatCompletion(model, apiKey);    // ← Integration!
+builder.AddOpenAIChatCompletion(model, apiKey);    // ← Integration!
+// ↓ Kernel ready
+var kernel = builder.Build();                       // ← Kernel ready
 
 // 4. Get chat service
+// ↓ Chat service काढून घेतो
 var chat = kernel.GetRequiredService<IChatCompletionService>();
 
 
